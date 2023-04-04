@@ -1,29 +1,31 @@
-﻿using System;
-using Connections.Models;
+﻿using Connections.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Connections.Views.RegionView
+namespace Connections.Views.CountryView
 {
-    public class VRegion
+    public class VCountry
     {
-        public void GetAll(List<Region> regions)
+        public void GetAll(List<Country> countries)
         {
-            foreach (var  region in regions)
+            foreach (var country in countries)
             {
                 Console.WriteLine("=================");
-                Console.WriteLine("Id: " + region.id);
-                Console.WriteLine("Name: " + region.name);
+                Console.WriteLine("Id: " + country.id);
+                Console.WriteLine("Name: " + country.name);
+                Console.WriteLine("Region: " + country.region_id);
             }
         }
 
-        public void GetById(Region region)
+        public void GetById(Country countries)
         {
             Console.WriteLine("=================");
-            Console.WriteLine("Id: " + region.id);
-            Console.WriteLine("Name: " + region.name);
+            Console.WriteLine("Id: " + countries.id);
+            Console.WriteLine("Name: " + countries.name);
+            Console.WriteLine("Region: " + countries.region_id);
         }
 
         public void Success(string message)

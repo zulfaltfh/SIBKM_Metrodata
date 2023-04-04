@@ -1,7 +1,9 @@
 ﻿using Connections.Controller;
+using Connections.Controllers;
 using Connections.Dbconnect;
 using Connections.Models;
 using Connections.Repositories;
+using Connections.Views.CountryView;
 using Connections.Views.RegionView;
 using System;
 using System.Data.SqlClient;
@@ -70,15 +72,15 @@ public class Program
                     break;
                 case 2:
                     Console.Clear();
-                    Console.WriteLine("=======Get by Id Region========");
+                    Console.WriteLine("======= Get by Id Region =======");
                     Console.Write("Input Id: ");
-                    var id = Convert.ToInt32(Console.ReadLine());
+                    var id = Convert.ToInt16(Console.ReadLine());
                     regionController.GetById(id);
                     Console.ReadKey();
                     break;
                 case 3:
                     Console.Clear();
-                    Console.WriteLine("=======Insert Region========");
+                    Console.WriteLine("======= Insert Region =======");
                     Console.Write("Input Name: ");
                     var name = Console.ReadLine();
                     regionController.Insert(new Region
@@ -89,9 +91,27 @@ public class Program
                     break;
                 case 4:
                     // Update
+                    Console.Clear();
+                    Console.WriteLine("======= Update Region =======");
+                    Console.Write("Input Id : ");
+                    var reg_id = Convert.ToInt16(Console.ReadLine());
+                    Console.Write("Edit Name : ");
+                    var reg_name = Console.ReadLine();
+                    regionController.Update(new Region
+                    {
+                        name = reg_name,
+                        id = reg_id
+                    });
+                    Console.ReadKey();
                     break;
                 case 5:
                     // Delete
+                    Console.Clear();
+                    Console.WriteLine("======= Delete Region =======");
+                    Console.Write("Input Id: ");
+                    var del_id = Convert.ToInt16(Console.ReadLine());
+                    regionController.Delete(del_id);
+                    Console.ReadKey();
                     break;
                 case 6:
                     check = false;
@@ -107,7 +127,78 @@ public class Program
 
     public static void Country()
     {
-
+        CountryController countryController = new CountryController(new CountryRepository(), new VCountry());
+        var check = true;
+        do
+        {
+            Console.Clear();
+            Console.WriteLine("=======Table Country========");
+            Console.WriteLine("1. Get All");
+            Console.WriteLine("2. Get By Id");
+            Console.WriteLine("3. Insert");
+            Console.WriteLine("4. Update");
+            Console.WriteLine("5. Delete");
+            Console.WriteLine("6. Exit");
+            Console.Write("Input: ");
+            var input = Convert.ToInt16(Console.ReadLine());
+            switch (input)
+            {
+                case 1:
+                    Console.Clear();
+                    countryController.GetAll();
+                    Console.ReadKey();
+                    break;
+                case 2:
+                    Console.Clear();
+                    Console.WriteLine("======= Get by Id Country =======");
+                    Console.Write("Input Id: ");
+                    var id = Console.ReadLine();
+                    countryController.GetById(id);
+                    Console.ReadKey();
+                    break;
+                case 3:
+                    Console.Clear();
+                    Console.WriteLine("======= Insert Country =======");
+                    Console.Write("Input Id: ");
+                    var idCountry = Console.ReadLine();
+                    Console.Write("Input Name: ");
+                    var nameCountry = Console.ReadLine();
+                    Console.Write("Input Id Region: ");
+                    var reg_id = Convert.ToInt16(Console.ReadLine());
+                    countryController.Insert(new Country
+                    {
+                        id = idCountry,
+                        name = nameCountry,
+                        region_id = reg_id
+                    });
+                    Console.ReadKey();
+                    break;
+                case 4:
+                    // Update
+                    Console.Clear();
+                    Console.WriteLine("======= Update Country =======");
+                    
+                    Console.ReadKey();
+                    break;
+                case 5:
+                    // Delete
+                    Console.Clear();
+                    Console.WriteLine("======= Delete Country =======");
+                    Console.Write("Input Id: ");
+                    var del_id = Console.ReadLine();
+                    countryController.Delete(del_id);
+                    Console.ReadKey();
+                    break;
+                case 6:
+                    check = false;
+                    break;
+                default:
+                    Console.WriteLine("Input not found!");
+                    Console.ReadKey();
+                    check = true;
+                    break;
+            }
+        } while (check);
     }
     //Get All : Country --> method untuk menampilkan semua data yang ada pada tabel
     /*public static void GetAllCountry()

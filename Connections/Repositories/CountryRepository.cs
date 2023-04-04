@@ -1,22 +1,22 @@
-﻿using Connections.Dbconnect;
-using Connections.Models;
+﻿using Connections.Models;
+using Connections.Dbconnect;
 using Connections.Repositories.Interfaces;
-using Connections.Views.RegionView;
 using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Connections.Views.RegionView;
 using System.Xml.Linq;
 
 namespace Connections.Repositories
 {
-    public class RegionRepository : IRegionRepository
+    public class CountryRepository : ICountryRepository
     {
-        public List<Region> GetAll()
+        public List<Country> GetAll()
         {
-            List<Region> regions = new List<Region>();
+            List<Country> countries = new List<Country>();
 
             //Instance sql connection
             var connection = Sqlconnect.GetConnect();
@@ -24,69 +24,21 @@ namespace Connections.Repositories
             //Membuat instance SQL Command
             SqlCommand cmd = new SqlCommand();
             cmd.Connection = connection;
-            cmd.CommandText = "Select * from region";
-
-            connection.Open();
-            using SqlDataReader reader = cmd.ExecuteReader();
-            if(reader.HasRows)
-            {
-                while(reader.Read())
-                {
-                    // alt 1
-                    /*Region region = new Region();
-                    region.Id = reader.GetInt32(0);
-                    region.Name = reader.GetString(1);*/
-
-                    // alt 2
-                    /*Region region = new Region {
-                        Id = reader.GetInt32(0),
-                        Name = reader.GetString(1)
-                    };
-                    regions.Add(region);*/
-
-                    // alt 3
-                    regions.Add(new Region
-                    {
-                        id = reader.GetInt32(0),
-                        name = reader.GetString(1)
-                    });
-                }
-            } else {
-                return null;
-            }
-            reader.Close();
-            connection.Close();
-
-            return regions;
-        }
-
-        public Region GetById(int id)
-        {
-
-            Region regions = new Region();
-
-            //Instance sql connection
-            var connection = Sqlconnect.GetConnect();
-
-            //Membuat instance SQL Command
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = connection;
-            cmd.CommandText = "Select * From region Where id = @id;";
-
-            //Instance SQL Parameter
-            SqlParameter pId = new SqlParameter();
-            pId.ParameterName = "@id";
-            pId.SqlDbType = System.Data.SqlDbType.Int;
-            pId.Value = id;
-            cmd.Parameters.Add(pId);
+            cmd.CommandText = "Select * from country";
 
             connection.Open();
             using SqlDataReader reader = cmd.ExecuteReader();
             if (reader.HasRows)
             {
-                reader.Read();
-                regions.id = reader.GetInt32(0);
-                regions.name = reader.GetString(1);
+                while (reader.Read())
+                {
+                    countries.Add(new Country
+                    {
+                        id = reader.GetString(0),
+                        name = reader.GetString(1),
+                        region_id = reader.GetInt32(2)
+                    });
+                }
             }
             else
             {
@@ -95,10 +47,48 @@ namespace Connections.Repositories
             reader.Close();
             connection.Close();
 
-            return regions;
+            return countries;
         }
 
-        public int Insert(Region region)
+        public Country GetById(string id)
+        {
+            Country countries = new Country();
+
+            //Instance sql connection
+            var connection = Sqlconnect.GetConnect();
+
+            //SQL Command
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = "Select * from country where id = @id;";
+
+            //SQL Parameter
+            SqlParameter pId = new SqlParameter();
+            pId.ParameterName = "@id";
+            pId.SqlDbType = System.Data.SqlDbType.VarChar;
+            pId.Value = id;
+            cmd.Parameters.Add(pId);
+
+            connection.Open();
+            using SqlDataReader reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                reader.Read();
+                countries.id = reader.GetString(0);
+                countries.name = reader.GetString(1);
+                countries.region_id = reader.GetInt32(2);
+            }
+            else
+            {
+                return null;
+            }
+            reader.Close();
+            connection.Close();
+
+            return countries;
+        }
+
+        public int Insert(Country countries)
         {
             var result = 0;
             var connection = Sqlconnect.GetConnect();
@@ -110,62 +100,29 @@ namespace Connections.Repositories
             {
                 SqlCommand cmd = new SqlCommand();
                 cmd.Connection = connection;
-                cmd.CommandText = "Insert Into region (name) Values (@name);";
+                cmd.CommandText = "Insert into country (id,name,region_id) values (@id, @name, @region_id);";
                 cmd.Transaction = transaction;
 
-                SqlParameter pName = new SqlParameter();
-                pName.ParameterName = "@name";
-                pName.SqlDbType = System.Data.SqlDbType.VarChar;
-                pName.Value = region.name;
-                cmd.Parameters.Add(pName);
-
-                result = cmd.ExecuteNonQuery();
-
-                transaction.Commit();
-                connection.Close();
-
-            }
-            catch
-            {
-                try
-                {
-                    transaction.Rollback();
-                }
-                catch (Exception exception)
-                {
-                    throw;
-                }
-            }
-
-            return result;
-        }
-
-        public int Update(Region region)
-        {
-            var result = 0;
-            var connection = Sqlconnect.GetConnect();
-            connection.Open();
-
-            SqlTransaction transaction = connection.BeginTransaction();
-
-            try
-            {
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = connection;
-                cmd.CommandText = "Update region Set name = @name Where id) = @id;";
-                cmd.Transaction = transaction;
-
+                //Instance SQL Parameter @id
                 SqlParameter pId = new SqlParameter();
                 pId.ParameterName = "@id";
-                pId.SqlDbType = System.Data.SqlDbType.Int;
-                pId.Value = region.id;
+                pId.SqlDbType = System.Data.SqlDbType.VarChar;
+                pId.Value = countries.id;
                 cmd.Parameters.Add(pId);
 
+                //Instance SQL Parameter @name
                 SqlParameter pName = new SqlParameter();
                 pName.ParameterName = "@name";
                 pName.SqlDbType = System.Data.SqlDbType.VarChar;
-                pName.Value = region.name;
+                pName.Value = countries.name;
                 cmd.Parameters.Add(pName);
+                
+                //Instance SQL Parameter @region_id
+                SqlParameter pReg = new SqlParameter();
+                pReg.ParameterName = "@region_id";
+                pReg.SqlDbType = System.Data.SqlDbType.Int;
+                pReg.Value = countries.region_id;
+                cmd.Parameters.Add(pReg);
 
                 result = cmd.ExecuteNonQuery();
 
@@ -188,7 +145,7 @@ namespace Connections.Repositories
             return result;
         }
 
-        public int Delete(int id)
+        public int Update(Country countries)
         {
             var result = 0;
             var connection = Sqlconnect.GetConnect();
@@ -200,12 +157,60 @@ namespace Connections.Repositories
             {
                 SqlCommand cmd = new SqlCommand();
                 cmd.Connection = connection;
-                cmd.CommandText = "Delete From region where id = @id;";
+                cmd.CommandText = "UPDATE country SET name = @name, region_id = @region_id WHERE id = @id;";
+                cmd.Transaction = transaction;
+
+                SqlParameter pName = new SqlParameter();
+                pName.ParameterName = "@name";
+                pName.SqlDbType = System.Data.SqlDbType.VarChar;
+                pName.Value = countries.name;
+                cmd.Parameters.Add(pName);
+
+                SqlParameter pRegion = new SqlParameter();
+                pRegion.ParameterName = "@region_id";
+                pRegion.SqlDbType = System.Data.SqlDbType.Int;
+                pRegion.Value = countries.region_id;
+                cmd.Parameters.Add(pRegion);
+
+                SqlParameter pId = new SqlParameter();
+                pId.ParameterName = "@id";
+                pId.SqlDbType = System.Data.SqlDbType.VarChar;
+                pId.Value = countries.id;
+                cmd.Parameters.Add(pId);
+
+                result = cmd.ExecuteNonQuery();
+
+                transaction.Commit();
+                connection.Close();
+            }
+            catch
+            {
+                try
+                {
+                    transaction.Rollback();
+                }
+                catch (Exception exception) { throw; }
+            }
+            return result;
+        }
+        public int Delete(string id)
+        {
+            var result = 0;
+            var connection = Sqlconnect.GetConnect();
+            connection.Open();
+
+            SqlTransaction transaction = connection.BeginTransaction();
+
+            try
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = connection;
+                cmd.CommandText = "Delete from country where id = @id;";
                 cmd.Transaction = transaction;
 
                 SqlParameter pId = new SqlParameter();
                 pId.ParameterName = "@id";
-                pId.SqlDbType = System.Data.SqlDbType.Int;
+                pId.SqlDbType = System.Data.SqlDbType.VarChar;
                 pId.Value = id;
                 cmd.Parameters.Add(pId);
 

@@ -11,7 +11,6 @@ namespace Connections.Controller
 {
     public class RegionController
     {
-        //Isi dari sebuah class region yang ada di repository
 
         private readonly IRegionRepository _regionRepository; //membaca interface dari region repository
         private readonly VRegion _vRegion; //membaca view region
@@ -49,29 +48,40 @@ namespace Connections.Controller
             var result = _regionRepository.Insert(region);
             if (result > 0)
             {
-                _vRegion.Success("inserted");
+                _vRegion.Success("ditambahkan");
             }
             else
             {
-                _vRegion.Failure("insert");
+                _vRegion.Failure("ditambahkan");
             }
         }
 
         // UPDATE
         public void Update(Region region)
         {
-
+            var result = _regionRepository.Update(region);
+            if (result > 0)
+            {
+                _vRegion.Success("diperbarui");
+            }
+            else
+            {
+                _vRegion.Failure("diperbarui");
+            }
         }
 
         // DELETE
         public void Delete(int id)
         {
-
-        }
-
-        internal void GetById(Region region)
-        {
-            throw new NotImplementedException();
+            var result = _regionRepository.Delete(id);
+            if (result > 0)
+            {
+                _vRegion.Success("dihapus");
+            }
+            else
+            {
+                _vRegion.Failure("dihapus");
+            }
         }
     }
 }
