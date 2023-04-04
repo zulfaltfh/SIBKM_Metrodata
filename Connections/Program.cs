@@ -1,4 +1,9 @@
-﻿using System;
+﻿using Connections.Controller;
+using Connections.Dbconnect;
+using Connections.Models;
+using Connections.Repositories;
+using Connections.Views.RegionView;
+using System;
 using System.Data.SqlClient;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -7,26 +12,105 @@ namespace Connections;
 public class Program
 {
     private static SqlConnection connection;
-    private static string connectionString = "Data Source=MSI;Initial Catalog=db_hr_sibkm; Integrated Security=True;Connect Timeout=30;Encrypt=False;";  
+
     public static void Main(string[] args)
     {
-        //GetAllCountry();
-        //GetIdCountry("ZW");
-        //InsertCountry("NK", "North Korea", 3);
-
-        //UpdateCountry("NK", "Korea Utara");
-        //Console.WriteLine();
-        //GetIdCountry("NK");
-
-        //UpdateCountry("ID", 3);
-        //Console.WriteLine();
-        //GetIdCountry("ID");
-
-        //DeleteCountry("NK");
+        var check = true;
+        do
+        {
+            Console.Clear();
+            Console.WriteLine("=======Database Connectivity=========");
+            Console.WriteLine("1. Manage Table Region");
+            Console.WriteLine("2. Manage Table Country");
+            Console.WriteLine("3. Exit");
+            Console.Write("Input: ");
+            var input = Convert.ToInt16(Console.ReadLine());
+            switch (input)
+            {
+                case 1:
+                    Region();
+                    break;
+                case 2:
+                    Country();
+                    break;
+                case 3:
+                    check = false;
+                    break;
+                default:
+                    Console.WriteLine("Input not found!");
+                    Console.ReadKey();
+                    check = true;
+                    break;
+            }
+        } while (check);
     }
 
+    public static void Region()
+    {
+        RegionController regionController = new RegionController(new RegionRepository(), new VRegion());
+        var check = true;
+        do
+        {
+            Console.Clear();
+            Console.WriteLine("=======Table Region========");
+            Console.WriteLine("1. Get All");
+            Console.WriteLine("2. Get By Id");
+            Console.WriteLine("3. Insert");
+            Console.WriteLine("4. Update");
+            Console.WriteLine("5. Delete");
+            Console.WriteLine("6. Exit");
+            Console.Write("Input: ");
+            var input = Convert.ToInt16(Console.ReadLine());
+            switch (input)
+            {
+                case 1:
+                    Console.Clear();
+                    regionController.GetAll();
+                    Console.ReadKey();
+                    break;
+                case 2:
+                    Console.Clear();
+                    Console.WriteLine("=======Get by Id Region========");
+                    Console.Write("Input Id: ");
+                    var id = Convert.ToInt32(Console.ReadLine());
+                    regionController.GetById(id);
+                    Console.ReadKey();
+                    break;
+                case 3:
+                    Console.Clear();
+                    Console.WriteLine("=======Insert Region========");
+                    Console.Write("Input Name: ");
+                    var name = Console.ReadLine();
+                    regionController.Insert(new Region
+                    {
+                        name = name
+                    });
+                    Console.ReadKey();
+                    break;
+                case 4:
+                    // Update
+                    break;
+                case 5:
+                    // Delete
+                    break;
+                case 6:
+                    check = false;
+                    break;
+                default:
+                    Console.WriteLine("Input not found!");
+                    Console.ReadKey();
+                    check = true;
+                    break;
+            }
+        } while (check);
+    }
+
+    public static void Country()
+    {
+
+    }
     //Get All : Country --> method untuk menampilkan semua data yang ada pada tabel
-    public static void GetAllCountry()
+    /*public static void GetAllCountry()
     {
         //instance SQL Connection
         connection = new SqlConnection(connectionString);
@@ -124,7 +208,7 @@ public class Program
             pName.SqlDbType = System.Data.SqlDbType.VarChar;
             pName.Value = name;
             cmd.Parameters.Add(pName);
-
+            7
             //Instance SQL Parameter @region_id
             SqlParameter pReg = new SqlParameter();
             pReg.ParameterName = "@region_id";
@@ -314,5 +398,5 @@ public class Program
                 Console.WriteLine(exception.Message);
             }
         }
-    }
+    }*/
 }
