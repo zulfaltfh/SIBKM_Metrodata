@@ -27,7 +27,6 @@ namespace Connections.Views.CountryView
             Console.WriteLine("Name: " + countries.name);
             Console.WriteLine("Region: " + countries.region_id);
         }
-
         public void Success(string message)
         {
             Console.WriteLine($"Data berhasil {message}");

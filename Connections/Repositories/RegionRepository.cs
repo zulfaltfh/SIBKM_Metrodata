@@ -110,7 +110,7 @@ namespace Connections.Repositories
             {
                 SqlCommand cmd = new SqlCommand();
                 cmd.Connection = connection;
-                cmd.CommandText = "Insert Into region (name) Values (@name);";
+                cmd.CommandText = "Insert Into region name Values @name;";
                 cmd.Transaction = transaction;
 
                 SqlParameter pName = new SqlParameter();
@@ -152,7 +152,7 @@ namespace Connections.Repositories
             {
                 SqlCommand cmd = new SqlCommand();
                 cmd.Connection = connection;
-                cmd.CommandText = "Update region Set name = @name Where id) = @id;";
+                cmd.CommandText = "Update region Set name = @name Where id = @id;";
                 cmd.Transaction = transaction;
 
                 SqlParameter pId = new SqlParameter();

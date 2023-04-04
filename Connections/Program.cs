@@ -6,6 +6,7 @@ using Connections.Repositories;
 using Connections.Views.CountryView;
 using Connections.Views.RegionView;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Data.SqlClient;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -164,12 +165,12 @@ public class Program
                     Console.Write("Input Name: ");
                     var nameCountry = Console.ReadLine();
                     Console.Write("Input Id Region: ");
-                    var reg_id = Convert.ToInt16(Console.ReadLine());
+                    var idRegion = Convert.ToInt16(Console.ReadLine());
                     countryController.Insert(new Country
                     {
                         id = idCountry,
                         name = nameCountry,
-                        region_id = reg_id
+                        region_id = idRegion
                     });
                     Console.ReadKey();
                     break;
@@ -177,7 +178,20 @@ public class Program
                     // Update
                     Console.Clear();
                     Console.WriteLine("======= Update Country =======");
-                    
+                    Console.Write("Input Id: ");
+                    var countryId = Console.ReadLine();
+                    countryController.GetById(countryId);
+                    Console.WriteLine("------------------------");
+                    Console.Write("Edit Name: ");
+                    var countryName = Console.ReadLine();
+                    Console.Write("Edit Region: ");
+                    var countryRegion = Convert.ToInt32(Console.ReadLine());
+                    countryController.Update(new Country
+                    {
+                        id = countryId,
+                        name = countryName,
+                        region_id = countryRegion
+                    });
                     Console.ReadKey();
                     break;
                 case 5:
@@ -185,8 +199,8 @@ public class Program
                     Console.Clear();
                     Console.WriteLine("======= Delete Country =======");
                     Console.Write("Input Id: ");
-                    var del_id = Console.ReadLine();
-                    countryController.Delete(del_id);
+                    var deleteId = Console.ReadLine();
+                    countryController.Delete(deleteId);
                     Console.ReadKey();
                     break;
                 case 6:
