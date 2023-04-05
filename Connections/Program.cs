@@ -14,8 +14,6 @@ namespace Connections;
 
 public class Program
 {
-    private static SqlConnection connection;
-
     public static void Main(string[] args)
     {
         var check = true;
@@ -83,10 +81,10 @@ public class Program
                     Console.Clear();
                     Console.WriteLine("======= Insert Region =======");
                     Console.Write("Input Name: ");
-                    var name = Console.ReadLine();
+                    var insertName = Console.ReadLine();
                     regionController.Insert(new Region
                     {
-                        name = name
+                        name = insertName
                     });
                     Console.ReadKey();
                     break;

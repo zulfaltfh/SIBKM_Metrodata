@@ -12,8 +12,8 @@ namespace Connections.Controller
     public class RegionController
     {
 
-        private readonly IRegionRepository _regionRepository; //membaca interface dari region repository
-        private readonly VRegion _vRegion; //membaca view region
+        private readonly IRegionRepository _regionRepository;
+        private readonly VRegion _vRegion;
 
         public RegionController(IRegionRepository regionRepository, VRegion vRegion)
         {
